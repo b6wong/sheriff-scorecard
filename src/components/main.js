@@ -37,37 +37,53 @@ class Main extends Component {
     }
 
     onFinishUpdatePlayer() {
-        console.log("close modal");
         this.setState({
             updatePlayer: null
+        })
+    }
+
+    onSelectPlayer(player) {
+        this.setState({
+            updatePlayer: player
         })
     }
 
     render() {
 
         const canAddMorePlayers = this.state.players.length < 5;
+        const isUpdatingPlayer = this.state.updatePlayer !== null;
 
         const playerList = this.state.players.map((obj, idx) => {
-            return (<li key={idx}>{obj.name}</li>);
+            return (<li onClick={() => this.onSelectPlayer(obj)} key={idx}>{obj.name}</li>);
         })
 
         return (
             <div>
-
-                <Modal isOpen={this.state.updatePlayer !== null}>
-                    <ModalHeader>
-                        <ModalClose onClick={() => this.onFinishUpdatePlayer()} />
-                        <ModalTitle>Update Player</ModalTitle>
-                    </ModalHeader>
-                    <ModalBody>
-                        <p>Update Player: ---</p>
-                    </ModalBody>
-                    <ModalFooter>
-                        <button className="btn btn-default btn-sm" onClick={() => this.onFinishUpdatePlayer()}>
-                            Close
-                        </button>
-                    </ModalFooter>
-                </Modal>
+                { isUpdatingPlayer ?
+                    <Modal isOpen={true}>
+                        <ModalHeader>
+                            <ModalClose onClick={() => this.onFinishUpdatePlayer()} />
+                            <ModalTitle>Update Player</ModalTitle>
+                        </ModalHeader>
+                        <ModalBody>
+                            <p>Update Player: {this.state.updatePlayer.name}</p>
+                            <p>Apple: {this.state.updatePlayer.apple}</p>
+                            <p>Bread: {this.state.updatePlayer.bread}</p>
+                            <p>Cheese: {this.state.updatePlayer.cheese}</p>
+                            <p>Chicken: {this.state.updatePlayer.chicken}</p>
+                            <p>Contraband: {this.state.updatePlayer.contraband}</p>
+                            <p>Gold: {this.state.updatePlayer.gold}</p>
+                        </ModalBody>
+                        <ModalFooter>
+                            <button className="btn btn-default btn-sm" onClick={() => this.onFinishUpdatePlayer()}>
+                                Close
+                            </button>
+                        </ModalFooter>
+                    </Modal>
+                    :
+                    null
+                }
+                
 
                 <h2>Welcome to Sheriff of Nottingham</h2>
 
