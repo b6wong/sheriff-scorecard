@@ -48,13 +48,40 @@ class Main extends Component {
         })
     }
 
+    onSetGoods(type, increment) {
+        let updatePlayer = this.state.updatePlayer;
+        switch(type) {
+            case 'apple':
+                updatePlayer.apple += increment;
+                if (updatePlayer.apple < 0) updatePlayer.apple = 0;
+                break;
+            case 'bread':
+                updatePlayer.bread += increment;
+                if (updatePlayer.bread < 0) updatePlayer.bread = 0;
+                break;
+            case 'cheese':
+                updatePlayer.cheese += increment;
+                if (updatePlayer.cheese < 0) updatePlayer.cheese = 0;
+                break;
+            case 'chicken':
+                updatePlayer.chicken += increment;
+                if (updatePlayer.chicken < 0) updatePlayer.chicken = 0;
+                break;
+            default:
+                break;
+        }
+        this.setState({
+            updatePlayer: updatePlayer
+        })
+    }
+
     render() {
 
         const canAddMorePlayers = this.state.players.length < 5;
         const isUpdatingPlayer = this.state.updatePlayer !== null;
 
         const playerList = this.state.players.map((obj, idx) => {
-            return (<li onClick={() => this.onSelectPlayer(obj)} key={idx}>{obj.name}</li>);
+            return (<li onClick={() => this.onSelectPlayer(obj)} key={idx}>{obj.name}, {obj.apple}, {obj.bread}, {obj.cheese}, {obj.chicken}, {obj.contraband}, {obj.gold}</li>);
         })
 
         return (
@@ -67,10 +94,10 @@ class Main extends Component {
                         </ModalHeader>
                         <ModalBody>
                             <p>Update Player: {this.state.updatePlayer.name}</p>
-                            <p>Apple: {this.state.updatePlayer.apple}</p>
-                            <p>Bread: {this.state.updatePlayer.bread}</p>
-                            <p>Cheese: {this.state.updatePlayer.cheese}</p>
-                            <p>Chicken: {this.state.updatePlayer.chicken}</p>
+                            <p>Apple: <button onClick={() => this.onSetGoods('apple', 1)}>+</button><button onClick={() => this.onSetGoods('apple', -1)}>-</button> {this.state.updatePlayer.apple}</p>
+                            <p>Bread: <button onClick={() => this.onSetGoods('bread', 1)}>+</button><button onClick={() => this.onSetGoods('bread', -1)}>-</button> {this.state.updatePlayer.bread}</p>
+                            <p>Cheese: <button onClick={() => this.onSetGoods('cheese', 1)}>+</button><button onClick={() => this.onSetGoods('cheese', -1)}>-</button> {this.state.updatePlayer.cheese}</p>
+                            <p>Chicken: <button onClick={() => this.onSetGoods('chicken', 1)}>+</button><button onClick={() => this.onSetGoods('chicken', -1)}>-</button> {this.state.updatePlayer.chicken}</p>
                             <p>Contraband: {this.state.updatePlayer.contraband}</p>
                             <p>Gold: {this.state.updatePlayer.gold}</p>
                         </ModalBody>
