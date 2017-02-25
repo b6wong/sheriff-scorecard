@@ -13,6 +13,7 @@ class Main extends Component {
 
         this.handlePlayerChange = this.handlePlayerChange.bind(this);
         this.onAddPlayer = this.onAddPlayer.bind(this);
+        this.handleGoodsChange = this.handleGoodsChange.bind(this);
     }
 
     handlePlayerChange(event) {
@@ -48,28 +49,16 @@ class Main extends Component {
         })
     }
 
-    onSetGoods(type, increment) {
-        let updatePlayer = this.state.updatePlayer;
-        switch(type) {
-            case 'apple':
-                updatePlayer.apple += increment;
-                if (updatePlayer.apple < 0) updatePlayer.apple = 0;
-                break;
-            case 'bread':
-                updatePlayer.bread += increment;
-                if (updatePlayer.bread < 0) updatePlayer.bread = 0;
-                break;
-            case 'cheese':
-                updatePlayer.cheese += increment;
-                if (updatePlayer.cheese < 0) updatePlayer.cheese = 0;
-                break;
-            case 'chicken':
-                updatePlayer.chicken += increment;
-                if (updatePlayer.chicken < 0) updatePlayer.chicken = 0;
-                break;
-            default:
-                break;
+    handleGoodsChange(event) {
+        const name = event.target.name;
+        let value = event.target.value < 0 ? 0 : parseInt(event.target.value, 10);
+        if (Number.isNaN(value)) {
+            value = 0;
         }
+        
+        let updatePlayer = this.state.updatePlayer;
+        updatePlayer[name] = value;
+
         this.setState({
             updatePlayer: updatePlayer
         })
@@ -94,12 +83,12 @@ class Main extends Component {
                         </ModalHeader>
                         <ModalBody>
                             <p>Update Player: {this.state.updatePlayer.name}</p>
-                            <p>Apple: <button onClick={() => this.onSetGoods('apple', 1)}>+</button><button onClick={() => this.onSetGoods('apple', -1)}>-</button> {this.state.updatePlayer.apple}</p>
-                            <p>Bread: <button onClick={() => this.onSetGoods('bread', 1)}>+</button><button onClick={() => this.onSetGoods('bread', -1)}>-</button> {this.state.updatePlayer.bread}</p>
-                            <p>Cheese: <button onClick={() => this.onSetGoods('cheese', 1)}>+</button><button onClick={() => this.onSetGoods('cheese', -1)}>-</button> {this.state.updatePlayer.cheese}</p>
-                            <p>Chicken: <button onClick={() => this.onSetGoods('chicken', 1)}>+</button><button onClick={() => this.onSetGoods('chicken', -1)}>-</button> {this.state.updatePlayer.chicken}</p>
-                            <p>Contraband: {this.state.updatePlayer.contraband}</p>
-                            <p>Gold: {this.state.updatePlayer.gold}</p>
+                            <p>Apple: <input name="apple" type="number" value={this.state.updatePlayer.apple} onChange={this.handleGoodsChange} /></p>
+                            <p>Bread: <input name="bread" type="number" value={this.state.updatePlayer.bread} onChange={this.handleGoodsChange} /></p>
+                            <p>Cheese: <input name="cheese" type="number" value={this.state.updatePlayer.cheese} onChange={this.handleGoodsChange} /></p>
+                            <p>Chicken: <input name="chicken" type="number" value={this.state.updatePlayer.chicken} onChange={this.handleGoodsChange} /></p>
+                            <p>Contraband: <input name="contraband" type="number" value={this.state.updatePlayer.contraband} onChange={this.handleGoodsChange} /></p>
+                            <p>Gold: <input name="gold" type="number" value={this.state.updatePlayer.gold} onChange={this.handleGoodsChange} /></p>
                         </ModalBody>
                         <ModalFooter>
                             <button className="btn btn-default btn-sm" onClick={() => this.onFinishUpdatePlayer()}>
@@ -110,7 +99,6 @@ class Main extends Component {
                     :
                     null
                 }
-                
 
                 <h2>Welcome to Sheriff of Nottingham</h2>
 
