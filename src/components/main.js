@@ -14,6 +14,7 @@ class Main extends Component {
         this.handlePlayerChange = this.handlePlayerChange.bind(this);
         this.onAddPlayer = this.onAddPlayer.bind(this);
         this.handleGoodsChange = this.handleGoodsChange.bind(this);
+        this.handleCalculateScore = this.handleCalculateScore.bind(this);
     }
 
     handlePlayerChange(event) {
@@ -24,11 +25,24 @@ class Main extends Component {
         const player = {
             name: this.state.addPlayer,
             apple: 0,
+            appleScore: 0,
+            appleKing: 0,
+            appleQueen: 0,
             bread: 0,
+            breadScore: 0,
+            breadKing: 0,
+            breadQueen: 0,
             cheese: 0,
+            cheeseScore: 0,
+            cheeseKing: 0,
+            cheeseQueen: 0,
             chicken: 0,
+            chickenScore: 0,
+            chickenKing: 0,
+            chickenQueen: 0,
             contraband: 0,
-            gold: 0
+            gold: 0,
+            totalScore: 0
         }
         this.state.players.push(player);
         this.setState({
@@ -63,14 +77,71 @@ class Main extends Component {
             updatePlayer: updatePlayer
         })
     }
+    
+
+    handleCalculateScore() {
+        const P_APPLE = 2;
+        const P_BREAD = 3;
+        const P_CHEESE = 3;
+        const P_CHICKEN = 4;
+        const P_APPLE_KING = 20;
+        const P_APPLE_QUEEN = 10;
+        const P_BREAD_KING = 15;
+        const P_BREAD_QUEEN = 10;
+        const P_CHEESE_KING = 15;
+        const P_CHEESE_QUEEN = 10;
+        const P_CHICKEN_KING = 10;
+        const P_CHICKEN_QUEEN = 5;
+
+        let players = this.state.players;
+
+        // Apple King / Queen
+        let appleRanking = players.sort(function(a,b) {
+            return a.apple < b.apple;
+        });
+        this.determindGoodsKingQueen(appleRanking, 'apple', 'appleKing', 'appleQueen', P_APPLE_KING, P_APPLE_QUEEN);
+        
+        // Bread King / Queen
+        let breadRanking = appleRanking.sort(function(a,b) {
+            return a.bread < b.bread;
+        });
+        this.determindGoodsKingQueen(breadRanking, 'bread', 'breadKing', 'breadQueen', P_BREAD_KING, P_BREAD_QUEEN);
+
+        // Cheese King / Queen
+        let cheeseRanking = breadRanking.sort(function(a,b) {
+            return a.cheese < b.cheese;
+        });
+        this.determindGoodsKingQueen(cheeseRanking, 'cheese', 'cheeseKing', 'cheeseQueen', P_CHEESE_KING, P_CHEESE_QUEEN);
+
+        // Chicken King / Queen
+        let chickenRanking = cheeseRanking.sort(function(a,b) {
+            return a.chicken < b.chicken;
+        })
+        this.determindGoodsKingQueen(chickenRanking, 'chicken', 'chickenKing', 'chickenQueen', P_CHICKEN_KING, P_CHICKEN_QUEEN);
+
+        for (let player of chickenRanking) {
+            player.appleScore = player.apple * P_APPLE;
+            player.breadScore = player.bread * P_BREAD;
+            player.cheeseScore = player.cheese * P_CHEESE;
+            player.chickenScore = player.chicken * P_CHICKEN;
+            player.totalScore = player.appleScore + player.breadScore + player.cheeseScore + player.chickenScore + player.contraband + player.gold;
+            console.log(player.name, "apple", player.appleKing, player.appleQueen, "bread", player.breadKing, player.breadQueen, "cheese", player.cheeseKing, player.cheeseQueen, "chicken", player.chickenKing, player.chickenQueen);
+        }
+
+        this.setState({
+            players: players
+        })
+
+    }
 
     render() {
 
         const canAddMorePlayers = this.state.players.length < 5;
+        const canCalculateScore = this.state.players.length > 2;
         const isUpdatingPlayer = this.state.updatePlayer !== null;
 
         const playerList = this.state.players.map((obj, idx) => {
-            return (<li onClick={() => this.onSelectPlayer(obj)} key={idx}>{obj.name}, {obj.apple}, {obj.bread}, {obj.cheese}, {obj.chicken}, {obj.contraband}, {obj.gold}</li>);
+            return (<li onClick={() => this.onSelectPlayer(obj)} key={idx}>{obj.name}, {obj.apple}, {obj.bread}, {obj.cheese}, {obj.chicken}, {obj.contraband}, {obj.gold}, {obj.totalScore}</li>);
         })
 
         return (
@@ -102,7 +173,8 @@ class Main extends Component {
 
                 <h2>Welcome to Sheriff of Nottingham</h2>
 
-                { canAddMorePlayers ?
+                { 
+                    canAddMorePlayers ?
                     <div>
                         <input type="text" value={this.state.addPlayer} onChange={this.handlePlayerChange} />
                         <button onClick={this.onAddPlayer} disabled={this.state.addPlayer === ''}>
@@ -115,13 +187,145 @@ class Main extends Component {
                 <ul>
                     {playerList}
                 </ul>
+
+                <button onClick={this.handleCalculateScore} disabled={!canCalculateScore}>Calculate Score</button>
+                
             </div>
         );
+    }
+
+    determindGoodsKingQueen(goodsRanking, goods, goodsKing, goodsQueen, GOODS_KING_BONUS, GOODS_QUEEN_BONUS) {
+        let kingScore = -1;
+        let queenScore = -1;
+        let kings = [];
+        let queens = [];
+        for (let player of goodsRanking) {
+            player[goodsKing] = 0;
+            player[goodsQueen] = 0;
+            if (queenScore < 0 && kingScore >= 0) {
+                queenScore = player[goods];
+            }
+            if (kingScore < 0) {
+                kingScore = player[goods];
+            }
+            if (player[goods] >= kingScore) {
+                kings.push(player);
+            }
+            if (player[goods] < kingScore && kings.length < 2 && player[goods] >= queenScore && queenScore !== -1) {
+                queens.push(player);
+            }
+        }
+        // If two+ kings, then they split the KING + QUEEN bonus
+        if (kings.length > 1) {
+            const bonus = Math.floor((GOODS_KING_BONUS + GOODS_QUEEN_BONUS) / kings.length);
+            for (let player of kings) {
+                player[goodsKing] = bonus;
+            }
+        }
+        if (kings.length === 1) {
+            kings[0][goodsKing] = GOODS_KING_BONUS;
+        }
+        // Queen(s) split the queen bonus
+        const appleBonus = Math.floor((GOODS_QUEEN_BONUS) / queens.length);
+        for (let player of queens) {
+            player[goodsQueen] = appleBonus;
+        }
     }
 }
 
 export default Main;
 
+
+/*
+{
+                    name: 'Bill',
+                    apple: 1,
+                    appleScore: 0,
+                    bread: 2,
+                    breadScore: 0,
+                    cheese: 3,
+                    cheeseScore: 0,
+                    chicken: 4,
+                    chickenScore: 0,
+                    contraband: 0,
+                    gold: 0,
+                    totalScore: 0,
+                    appleKing: 0,
+                    appleQueen: 0,
+                    breadKing: 0,
+                    breadQueen: 0,
+                    cheeseKing: 0,
+                    cheeseQueen: 0,
+                    chickenKing: 0,
+                    chickenQueen: 0
+                },
+                {
+                    name: 'Andrea',
+                    apple: 3,
+                    appleScore: 0,
+                    bread: 3,
+                    breadScore: 0,
+                    cheese: 4,
+                    cheeseScore: 0,
+                    chicken: 1,
+                    chickenScore: 0,
+                    contraband: 0,
+                    gold: 0,
+                    totalScore: 0,
+                    appleKing: 0,
+                    appleQueen: 0,
+                    breadKing: 0,
+                    breadQueen: 0,
+                    cheeseKing: 0,
+                    cheeseQueen: 0,
+                    chickenKing: 0,
+                    chickenQueen: 0
+                },
+                {
+                    name: 'Heidi',
+                    apple: 3,
+                    appleScore: 0,
+                    bread: 4,
+                    breadScore: 0,
+                    cheese: 1,
+                    cheeseScore: 0,
+                    chicken: 2,
+                    chickenScore: 0,
+                    contraband: 1,
+                    gold: 0,
+                    totalScore: 0,
+                    appleKing: 0,
+                    appleQueen: 0,
+                    breadKing: 0,
+                    breadQueen: 0,
+                    cheeseKing: 0,
+                    cheeseQueen: 0,
+                    chickenKing: 0,
+                    chickenQueen: 0
+                },
+                {
+                    name: 'Kevin',
+                    apple: 4,
+                    appleScore: 0,
+                    bread: 1,
+                    breadScore: 0,
+                    cheese: 2,
+                    cheeseScore: 0,
+                    chicken: 3,
+                    chickenScore: 0,
+                    contraband: 0,
+                    gold: 1,
+                    totalScore: 0,
+                    appleKing: 0,
+                    appleQueen: 0,
+                    breadKing: 0,
+                    breadQueen: 0,
+                    cheeseKing: 0,
+                    cheeseQueen: 0,
+                    chickenKing: 0,
+                    chickenQueen: 0
+                }
+*/
 
 
  
