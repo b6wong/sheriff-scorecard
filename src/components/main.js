@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalTitle, ModalClose, ModalBody, ModalFooter } from 'react-modal-bootstrap';
+import PlayersList from './PlayersList.js';
 
 class Main extends Component {
 
@@ -15,6 +16,7 @@ class Main extends Component {
         this.onAddPlayer = this.onAddPlayer.bind(this);
         this.handleGoodsChange = this.handleGoodsChange.bind(this);
         this.handleCalculateScore = this.handleCalculateScore.bind(this);
+        this.onSelectPlayer = this.onSelectPlayer.bind(this);
     }
 
     handlePlayerChange(event) {
@@ -140,10 +142,6 @@ class Main extends Component {
         const canCalculateScore = this.state.players.length > 2;
         const isUpdatingPlayer = this.state.updatePlayer !== null;
 
-        const playerList = this.state.players.map((obj, idx) => {
-            return (<li onClick={() => this.onSelectPlayer(obj)} key={idx}>{obj.name}, {obj.apple}, {obj.bread}, {obj.cheese}, {obj.chicken}, {obj.contraband}, {obj.gold}, {obj.totalScore}</li>);
-        })
-
         return (
             <div>
                 { isUpdatingPlayer ?
@@ -183,10 +181,8 @@ class Main extends Component {
                     </div> :
                     null
                 }
-                
-                <ul>
-                    {playerList}
-                </ul>
+
+                <PlayersList playerList={this.state.players} onSelectPlayer={this.onSelectPlayer} />
 
                 <button onClick={this.handleCalculateScore} disabled={!canCalculateScore}>Calculate Score</button>
                 
