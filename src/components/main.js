@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { Modal, ModalHeader, ModalTitle, ModalClose, ModalBody, ModalFooter } from 'react-modal-bootstrap';
-import PlayersList from './PlayersList.js';
+import PlayersList from './PlayersList';
+import AddPlayer from './AddPlayer';
 
 class Main extends Component {
 
@@ -172,19 +173,26 @@ class Main extends Component {
                 <h2>Welcome to Sheriff of Nottingham</h2>
 
                 { 
-                    canAddMorePlayers ?
-                    <div>
-                        <input type="text" value={this.state.addPlayer} onChange={this.handlePlayerChange} />
-                        <button onClick={this.onAddPlayer} disabled={this.state.addPlayer === ''}>
-                            Add Player
-                        </button>
-                    </div> :
-                    null
+                    canAddMorePlayers ?       
+                        <AddPlayer 
+                            addPlayer={this.state.addPlayer} 
+                            handlePlayerChange={this.handlePlayerChange}
+                            onAddPlayer={this.onAddPlayer}
+                        />
+                    :
+                        null
                 }
 
-                <PlayersList playerList={this.state.players} onSelectPlayer={this.onSelectPlayer} />
+                <PlayersList 
+                    playerList={this.state.players} 
+                    onSelectPlayer={this.onSelectPlayer} 
+                />
 
-                <button onClick={this.handleCalculateScore} disabled={!canCalculateScore}>Calculate Score</button>
+                <button 
+                    onClick={this.handleCalculateScore} 
+                    disabled={!canCalculateScore}>
+                        Calculate Score
+                </button>
                 
             </div>
         );
