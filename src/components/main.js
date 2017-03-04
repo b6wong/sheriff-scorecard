@@ -126,7 +126,11 @@ class Main extends Component {
             player.breadScore = player.bread * P_BREAD;
             player.cheeseScore = player.cheese * P_CHEESE;
             player.chickenScore = player.chicken * P_CHICKEN;
-            player.totalScore = player.appleScore + player.breadScore + player.cheeseScore + player.chickenScore + player.contraband + player.gold;
+            player.totalScore = player.appleScore + player.appleKing + player.appleQueen + 
+                                player.breadScore + player.breadKing + player.breadQueen +
+                                player.cheeseScore + player.cheeseKing + player.cheeseQueen +
+                                player.chickenScore + player.chickenKing + player.chickenQueen + 
+                                player.contraband + player.gold;
             console.log(player.name, "apple", player.appleKing, player.appleQueen, "bread", player.breadKing, player.breadQueen, "cheese", player.cheeseKing, player.cheeseQueen, "chicken", player.chickenKing, player.chickenQueen);
         }
 
