@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Modal, ModalHeader, ModalTitle, ModalClose, ModalBody, ModalFooter } from 'react-modal-bootstrap';
+import ReactWeb from './ReactWeb';
 
 class Main extends Component {
 
@@ -15,6 +15,8 @@ class Main extends Component {
         this.onAddPlayer = this.onAddPlayer.bind(this);
         this.handleGoodsChange = this.handleGoodsChange.bind(this);
         this.handleCalculateScore = this.handleCalculateScore.bind(this);
+        this.onSelectPlayer = this.onSelectPlayer.bind(this);
+        this.onFinishUpdatePlayer = this.onFinishUpdatePlayer.bind(this);
     }
 
     handlePlayerChange(event) {
@@ -136,60 +138,19 @@ class Main extends Component {
 
     render() {
 
-        const canAddMorePlayers = this.state.players.length < 5;
-        const canCalculateScore = this.state.players.length > 2;
-        const isUpdatingPlayer = this.state.updatePlayer !== null;
-
-        const playerList = this.state.players.map((obj, idx) => {
-            return (<li onClick={() => this.onSelectPlayer(obj)} key={idx}>{obj.name}, {obj.apple}, {obj.bread}, {obj.cheese}, {obj.chicken}, {obj.contraband}, {obj.gold}, {obj.totalScore}</li>);
-        })
-
         return (
             <div>
-                { isUpdatingPlayer ?
-                    <Modal isOpen={true}>
-                        <ModalHeader>
-                            <ModalClose onClick={() => this.onFinishUpdatePlayer()} />
-                            <ModalTitle>Update Player</ModalTitle>
-                        </ModalHeader>
-                        <ModalBody>
-                            <p>Update Player: {this.state.updatePlayer.name}</p>
-                            <p>Apple: <input name="apple" type="number" value={this.state.updatePlayer.apple} onChange={this.handleGoodsChange} /></p>
-                            <p>Bread: <input name="bread" type="number" value={this.state.updatePlayer.bread} onChange={this.handleGoodsChange} /></p>
-                            <p>Cheese: <input name="cheese" type="number" value={this.state.updatePlayer.cheese} onChange={this.handleGoodsChange} /></p>
-                            <p>Chicken: <input name="chicken" type="number" value={this.state.updatePlayer.chicken} onChange={this.handleGoodsChange} /></p>
-                            <p>Contraband: <input name="contraband" type="number" value={this.state.updatePlayer.contraband} onChange={this.handleGoodsChange} /></p>
-                            <p>Gold: <input name="gold" type="number" value={this.state.updatePlayer.gold} onChange={this.handleGoodsChange} /></p>
-                        </ModalBody>
-                        <ModalFooter>
-                            <button className="btn btn-default btn-sm" onClick={() => this.onFinishUpdatePlayer()}>
-                                Close
-                            </button>
-                        </ModalFooter>
-                    </Modal>
-                    :
-                    null
-                }
-
-                <h2>Welcome to Sheriff of Nottingham</h2>
-
-                { 
-                    canAddMorePlayers ?
-                    <div>
-                        <input type="text" value={this.state.addPlayer} onChange={this.handlePlayerChange} />
-                        <button onClick={this.onAddPlayer} disabled={this.state.addPlayer === ''}>
-                            Add Player
-                        </button>
-                    </div> :
-                    null
-                }
-                
-                <ul>
-                    {playerList}
-                </ul>
-
-                <button onClick={this.handleCalculateScore} disabled={!canCalculateScore}>Calculate Score</button>
-                
+                <ReactWeb 
+                    updatePlayer={this.state.updatePlayer}
+                    players={this.state.players}
+                    onFinishUpdatePlayer={this.onFinishUpdatePlayer}
+                    handleGoodsChange={this.handleGoodsChange}
+                    addPlayer={this.state.addPlayer}
+                    handlePlayerChange={this.handlePlayerChange}
+                    onAddPlayer={this.onAddPlayer}
+                    onSelectPlayer={this.onSelectPlayer}
+                    handleCalculateScore={this.handleCalculateScore}
+                />    
             </div>
         );
     }
