@@ -131,8 +131,11 @@ class Main extends Component {
                                 player.cheeseScore + player.cheeseKing + player.cheeseQueen +
                                 player.chickenScore + player.chickenKing + player.chickenQueen + 
                                 player.contraband + player.gold;
-            console.log(player.name, "apple", player.appleKing, player.appleQueen, "bread", player.breadKing, player.breadQueen, "cheese", player.cheeseKing, player.cheeseQueen, "chicken", player.chickenKing, player.chickenQueen);
         }
+
+        players = players.sort(function(a,b) {
+            return a.totalScore < b.totalScore;
+        })
 
         this.setState({
             players: players

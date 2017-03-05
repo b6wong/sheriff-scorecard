@@ -22,21 +22,47 @@ class ReactWeb extends Component {
         const isUpdatingPlayer = this.props.updatePlayer !== null;
 
         return (
-            <div>
+            <div className="container">
+                <div className="page-header">
+                    <h1>Sheriff of Nottingham Scorecard</h1>
+                    <p className="lead">Add Players.  Enter Goods.  Calculate Score.</p>
+                </div>
+
                 { isUpdatingPlayer ?
                     <Modal isOpen={true}>
                         <ModalHeader>
                             <ModalClose onClick={() => this.onFinishUpdatePlayer()} />
-                            <ModalTitle>Update Player</ModalTitle>
+                            <ModalTitle>{this.props.updatePlayer.name}</ModalTitle>
                         </ModalHeader>
                         <ModalBody>
-                            <p>Update Player: {this.props.updatePlayer.name}</p>
-                            <p>Apple: <input name="apple" type="number" value={this.props.updatePlayer.apple} onChange={this.handleGoodsChange} /></p>
-                            <p>Bread: <input name="bread" type="number" value={this.props.updatePlayer.bread} onChange={this.handleGoodsChange} /></p>
-                            <p>Cheese: <input name="cheese" type="number" value={this.props.updatePlayer.cheese} onChange={this.handleGoodsChange} /></p>
-                            <p>Chicken: <input name="chicken" type="number" value={this.props.updatePlayer.chicken} onChange={this.handleGoodsChange} /></p>
-                            <p>Contraband: <input name="contraband" type="number" value={this.props.updatePlayer.contraband} onChange={this.handleGoodsChange} /></p>
-                            <p>Gold: <input name="gold" type="number" value={this.props.updatePlayer.gold} onChange={this.handleGoodsChange} /></p>
+                            <table className="table table-hover">
+                                <tbody>
+                                    <tr>
+                                        <td>Apple</td>
+                                        <td><input name="apple" type="number" value={this.props.updatePlayer.apple} onChange={this.handleGoodsChange} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bread</td>
+                                        <td><input name="bread" type="number" value={this.props.updatePlayer.bread} onChange={this.handleGoodsChange} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Cheese</td>
+                                        <td><input name="cheese" type="number" value={this.props.updatePlayer.cheese} onChange={this.handleGoodsChange} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Chicken</td>
+                                        <td><input name="chicken" type="number" value={this.props.updatePlayer.chicken} onChange={this.handleGoodsChange} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Contraband</td>
+                                        <td><input name="contraband" type="number" value={this.props.updatePlayer.contraband} onChange={this.handleGoodsChange} /></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Gold</td>
+                                        <td><input name="gold" type="number" value={this.props.updatePlayer.gold} onChange={this.handleGoodsChange} /></td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </ModalBody>
                         <ModalFooter>
                             <button className="btn btn-default btn-sm" onClick={() => this.onFinishUpdatePlayer()}>
@@ -48,7 +74,6 @@ class ReactWeb extends Component {
                     null
                 }
 
-                <h2>Welcome to Sheriff of Nottingham</h2>
 
                 { 
                     canAddMorePlayers ?       
@@ -61,16 +86,26 @@ class ReactWeb extends Component {
                         null
                 }
 
-                <PlayersList 
-                    playerList={this.props.players} 
-                    onSelectPlayer={this.onSelectPlayer} 
-                />
+                {
+                    this.props.players.length > 0 ?
+                        <PlayersList 
+                            playerList={this.props.players} 
+                            onSelectPlayer={this.onSelectPlayer} 
+                        />
+                    :
+                        null
+                }
 
-                <button 
-                    onClick={this.handleCalculateScore} 
-                    disabled={!canCalculateScore}>
-                        Calculate Score
-                </button>
+                {
+                    canCalculateScore ?
+                        <button 
+                            onClick={this.handleCalculateScore} 
+                            >
+                                Calculate Score
+                        </button>
+                    :
+                        null
+                }
             </div>
         );
 

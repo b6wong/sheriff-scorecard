@@ -12,16 +12,20 @@ class AddPlayer extends Component {
 
         return (
             <div>
-                <input 
-                    type="text" 
-                    value={this.props.addPlayer} 
-                    onChange={this.handlePlayerChange} 
-                />
-                <button 
-                    onClick={this.onAddPlayer} 
-                    disabled={this.props.addPlayer === ''}>
-                        Add Player
-                </button>
+                <h3>Add Player</h3>
+                <p>Add three to five players</p>
+                <div className="row">
+                    <input 
+                        type="text" 
+                        value={this.props.addPlayer} 
+                        onChange={this.handlePlayerChange} 
+                    />    
+                    <button 
+                        onClick={this.onAddPlayer} 
+                        disabled={this.props.addPlayer === ''}>
+                            Add Player
+                    </button>
+                </div>
             </div>
         );
 
