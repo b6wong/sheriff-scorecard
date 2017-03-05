@@ -99,6 +99,7 @@ class ReactWeb extends Component {
                 {
                     canCalculateScore ?
                         <button 
+                            className="btn btn-primary"
                             onClick={this.handleCalculateScore} 
                             >
                                 Calculate Score

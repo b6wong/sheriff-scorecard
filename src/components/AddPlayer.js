@@ -15,16 +15,22 @@ class AddPlayer extends Component {
                 <h3>Add Player</h3>
                 <p>Add three to five players</p>
                 <div className="row">
-                    <input 
-                        type="text" 
-                        value={this.props.addPlayer} 
-                        onChange={this.handlePlayerChange} 
-                    />    
-                    <button 
-                        onClick={this.onAddPlayer} 
-                        disabled={this.props.addPlayer === ''}>
-                            Add Player
-                    </button>
+                    <div className="col-xs-8">
+                        <input 
+                            className="form-control"
+                            type="text" 
+                            value={this.props.addPlayer} 
+                            onChange={this.handlePlayerChange} 
+                        />    
+                    </div>
+                    <div className="col-xs-4">
+                        <button 
+                            className="btn btn-primary"
+                            onClick={this.onAddPlayer} 
+                            disabled={this.props.addPlayer === ''}>
+                                Add Player
+                        </button>
+                    </div>
                 </div>
             </div>
         );
